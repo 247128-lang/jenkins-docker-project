@@ -9,9 +9,21 @@ pipeline {
             }
         }
 
-        stage('Show Files') {
+        stage('Build Docker Image') {
             steps {
-                bat 'dir'
+                bat 'docker build -t mywebsite .'
+            }
+        }
+
+        stage('Remove Old Container') {
+            steps {
+                bat 'docker rm -f mywebsite || exit 0'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                bat 'docker run -d --name mywebsite -p 8081:80 mywebsite'
             }
         }
     }
